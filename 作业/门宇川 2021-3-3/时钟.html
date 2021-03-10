@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>时钟</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      .clock-box {
+        width: 600px;
+        height: 600px;
+        line-height: 600px;
+        text-align: center;
+        background-image: url("./images/clock.jpg");
+        background-size: cover;
+        margin: 50px auto;
+        position: relative;
+      }
+
+      .clock-box img {
+        position: absolute;
+        margin-left: -15px;
+        transition: 0.2s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="clock-box">
+        <img src="./images/hour.png" class="hour" />
+        <img src="./images/minute.png" class="minute" />
+        <img src="./images/second.png" class="second" />
+      </div>
+    </div>
+    <script>
+      let hour = document.getElementsByClassName("hour")[0];
+      let minute = document.getElementsByClassName("minute")[0];
+      let second = document.getElementsByClassName("second")[0];
+      startClock();
+
+      let clock = setInterval(() => {
+        startClock();
+      }, 1000);
+      function startClock() {
+        let time = new Date();
+        let _hours = time.getHours();
+        _hours = _hours > 12 ? _hours - 12 : _hours;
+        let _minutes = time.getMinutes();
+        let _seconds = time.getSeconds() + 1;
+        hour.style.transform = `rotate(${_hours * 6 * 5}deg)`;
+        minute.style.transform = `rotate(${_minutes * 6}deg)`;
+        second.style.transform = `rotate(${_seconds * 6}deg)`;
+      }
+    </script>
+  </body>
+</html>

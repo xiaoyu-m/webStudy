@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>事件</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #root {
+        width: 420px;
+        height: 420px;
+        padding: 16px;
+        margin: 50px auto;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      .tags {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        margin-bottom: 10px;
+        border-bottom: 2px solid #aaa;
+      }
+      .tags b {
+        display: inline-block;
+        width: 25%;
+        border-bottom: 5px solid #fff;
+      }
+      .tags b.active {
+        border-bottom-color: #f22;
+      }
+      ul {
+        list-style: none;
+        margin-top: 30px;
+      }
+      li {
+        margin-bottom: 10px;
+      }
+      li span {
+        background-color: #ccc;
+        padding: 2px 5px;
+      }
+      h2 {
+        color: #f22;
+        margin-top: 15px;
+      }
+      .page {
+        display: none;
+      }
+      .page.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="tags">
+        <b>电玩</b>
+        <b class="active">网游</b>
+        <b>手游</b>
+        <b>数码</b>
+      </div>
+      <div class="subpages">
+        <div class="page"><h2>page1</h2></div>
+        <div class="page active">
+          <h2>英雄联盟PBE1.23乌鸦重做剑圣加强</h2>
+          <p>[守望先锋DVA新皮肤] [冒险岛2书籍类成就]</p>
+          <h2>炉石传说世锦赛圆满落幕台湾选手夺冠</h2>
+          <p>[穿越火线SCAL评测] [韩服S8赛季排位开启]</p>
+          <ul>
+            <li>
+              <span>新闻</span> 《创世战车》"上天”战舰计划新款车包惊喜上线
+            </li>
+            <li><span>新闻</span> 《AVA战地之王》大型战役联合作战改版回归</li>
+            <li><span>新闻</span> 测试4年销量超500万 《RUST》终于要上市了</li>
+            <li><span>新闻</span> 2017网易CC直播年度风云盛典"玩出新姿态"</li>
+            <li>
+              <span>新闻</span> 台湾选手独揽160万奖金炉石传说世锦赛圆满落幕
+            </li>
+            <li>
+              <span>新闻</span> 诺克萨斯大统领斯维因整容归来恶魔变身酷炫炸天
+            </li>
+            <li><span>希望</span> 逆水寒CG被质疑抄袭FF14官方火速整改道歉</li>
+          </ul>
+        </div>
+        <div class="page"><h2>page3</h2></div>
+        <div class="page"><h2>page4</h2></div>
+      </div>
+    </div>
+    <script>
+      let tags = document.getElementsByClassName("tags")[0].children;
+      let pages = document.getElementsByClassName("page");
+      for (const tagsKey in [...tags]) {
+        const _tagsKey = tagsKey * 1;
+        tags[_tagsKey].onmouseenter = () => {
+          for (const index in [...tags]) {
+            const _index = index * 1;
+            tags[_index].classList.remove("active");
+            pages[_index].classList.remove("active");
+          }
+          tags[_tagsKey].classList.add("active");
+          pages[_tagsKey].classList.add("active");
+        };
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+		/>
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>事件</title>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				height: 300vh;
+			}
+			.ad {
+				width: 120px;
+				height: 250px;
+				line-height: 250px;
+				text-align: center;
+				color: #fff;
+				background-color: #f226;
+				position: absolute;
+				top: 50%;
+				margin-top: -125px;
+				transition: top 1s;
+			}
+			.ad:first-of-type {
+				left: 0;
+			}
+			.ad:last-of-type {
+				right: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="root">
+			<div class="ad"><h1>广告</h1></div>
+			<div class="ad"><h1>广告</h1></div>
+		</div>
+		<script>
+			let ads = document.getElementsByClassName("ad");
+			document.onscroll = () => {
+				const top = document.documentElement.scrollTop;
+				if (top > 50) {
+					ads[0].style.top = top + 250 + "px";
+					ads[1].style.top = top + 250 + "px";
+				} else {
+					ads[0].style.top = "50%";
+					ads[1].style.top = "50%";
+				}
+			};
+		</script>
+	</body>
+</html>

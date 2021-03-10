@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>乱弹</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        -moz-user-select: none; /* Firefox私有属性 */
+        -webkit-user-select: none; /* WebKit内核私有属性 */
+        -ms-user-select: none; /* IE私有属性(IE10及以后) */
+        -khtml-user-select: none; /* KHTML内核私有属性 */
+        -o-user-select: none; /* Opera私有属性 */
+        user-select: none; /* CSS3属性 */
+        cursor: pointer;
+      }
+
+      .start-btn {
+        margin: 50px auto;
+        width: 80px;
+        text-align: center;
+        padding: 2px 12px;
+        border-radius: 5px;
+        background-color: #ff4d50;
+        color: #fff;
+        display: block;
+        transition: 0.1s;
+        transition-delay: 0.05s;
+      }
+      .start-btn.stop {
+        background-color: #3b979d;
+      }
+      .ball {
+        width: 150px;
+        height: 150px;
+        background-color: #4ac5ce;
+        border-radius: 50%;
+        position: absolute;
+      }
+      .ball:nth-of-type(1) {
+        left: 30px;
+        top: 30px;
+      }
+      .ball:nth-of-type(2) {
+        left: 28px;
+        top: 130px;
+      }
+      .ball:nth-of-type(3) {
+        left: 98px;
+        top: 230px;
+      }
+      .ball:nth-of-type(4) {
+        left: 322px;
+        top: 688px;
+      }
+      .ball:nth-of-type(5) {
+        left: 155px;
+        top: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <b class="start-btn">开始</b>
+      <div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>
+      <div class="ball"></div>
+    </div>
+    <script>
+      let startBtn = document.getElementsByClassName("start-btn")[0];
+      let balls = document.getElementsByClassName("ball");
+      let ballSize = balls[0].offsetWidth;
+      let move = null;
+      let ballState = true;
+      startBtn.onclick = (e) => {
+        startBtn.innerText = ballState ? "停止" : "开始";
+        startBtn.classList[ballState ? "add" : "remove"]("stop");
+        ballState = !ballState;
+        if (ballState) {
+          clearInterval(move);
+        } else {
+          move = startMove();
+        }
+      };
+      function startMove() {
+        return setInterval(() => {
+          let stateX = [];
+          let stateY = [];
+
+          let maxX = innerWidth - balls[0].offsetWidth;
+          let maxY = innerHeight - balls[0].offsetWidth;
+          for (let ballIndex = 0; ballIndex < balls.length; ballIndex++) {
+            let ballX = balls[ballIndex].offsetLeft;
+            let ballY = balls[ballIndex].offsetTop;
+            // X轴运动
+            if (ballIndex % 2 == 0) {
+              if (ballX < maxX && stateX[ballIndex] === false) {
+                balls[ballIndex].style.left = ballX + 1 + "px";
+              } else if (ballX === maxX || stateX[ballIndex] === true) {
+                stateX[ballIndex] = true;
+                balls[ballIndex].style.left = ballX - 1 + "px";
+                if (ballX === 0) {
+                  stateX[ballIndex] = false;
+                }
+              }
+              // Y轴运动
+              if (ballY < maxY && stateY[ballIndex] === false) {
+                balls[ballIndex].style.top = ballY + 1 + "px";
+              } else if (ballY === maxY || stateY[ballIndex] === true) {
+                stateY[ballIndex] = true;
+                balls[ballIndex].style.top = ballY - 1 + "px";
+                if (ballY === 0) {
+                  stateY[ballIndex] = false;
+                }
+              }
+            } else {
+              if (ballX > 0 && stateX[ballIndex] === false) {
+                balls[ballIndex].style.left = ballX + 1 + "px";
+              } else if (ballX === 0 || !stateX[ballIndex] === true) {
+                stateX[ballIndex] = true;
+                balls[ballIndex].style.left = ballX - 1 + "px";
+                if (ballX === maxX) {
+                  stateX[ballIndex] = false;
+                }
+              }
+              // Y轴运动
+              if (ballY > 0 && stateY[ballIndex] === false) {
+                balls[ballIndex].style.top = ballY + 1 + "px";
+              } else if (ballY === 0 || stateY[ballIndex] === true) {
+                stateY[ballIndex] = true;
+                balls[ballIndex].style.top = ballY - 1 + "px";
+                if (ballY === maxY) {
+                  stateY[ballIndex] = false;
+                }
+              }
+            }
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

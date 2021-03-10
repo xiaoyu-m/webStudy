@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #root {
+        height: 100vh;
+        line-height: 100vh;
+        text-align: center;
+      }
+
+      b {
+        display: inline-block;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        border-radius: 50%;
+        color: #fff;
+        background-color: #ff4d50;
+        margin: 5px;
+      }
+      b.b {
+        background-color: cornflowerblue;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      let root = document.getElementById("root");
+      let squre = [];
+      let count = 0;
+      while (count < 6) {
+        const squreNum = GetNum();
+        if (!!squre.indexOf(squreNum)) {
+          squre.push(squreNum);
+          let squreEven = document.createElement("b");
+          squreEven.innerText = squreNum;
+          root.append(squreEven);
+          count++;
+        }
+      }
+
+      let squreEven = document.createElement("b");
+      squreEven.innerText = GetNum();
+      squreEven.className = "b";
+      root.append(squreEven);
+      console.table(squre);
+      // 1-10的随机数
+      function GetNum(x = 1, y = 33) {
+        return Math.floor(Math.random() * (y - x + 1) + x);
+      }
+    </script>
+  </body>
+</html>

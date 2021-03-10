@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>小广告</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #ad {
+        width: 300px;
+        height: 320px;
+        background-color: #efefef;
+        box-sizing: border-box;
+        position: fixed;
+        right: 10px;
+        bottom: -330px;
+        transition: 1s;
+        text-align: right;
+        padding: 10px;
+      }
+      #ad b {
+        cursor: pointer;
+      }
+      #ad p,
+      #ad h1 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="ad">
+        <b onclick="stopAd()">关闭</b>
+        <p class="tip"></p>
+        <h1 class="title">我是小广告</h1>
+      </div>
+    </div>
+    <script>
+      function test() {
+        alert("test");
+      }
+      let count = 15;
+
+      let ad = document.getElementById("ad");
+      let title = document.getElementsByClassName("title")[0];
+      let tip = document.getElementsByClassName("tip")[0];
+      tip.innerText = `${count}秒后关闭`;
+      window.onload = () => {
+        ad.style.bottom = "10px";
+      };
+      function stopAd() {
+        ad.style.display = "none";
+        clearInterval(startAD);
+      }
+      let startAD = setInterval(() => {
+        if (count < 1) {
+          stopAd();
+        }
+        tip.innerText = `${count}秒后关闭`;
+        count--;
+      }, 1000);
+      // 浅克隆，只克隆节点
+      console.warn(title.cloneNode(false));
+      // 深克隆，克隆节点和里面的子接点
+      console.warn(title.cloneNode(true));
+
+      document.getElementById("root").append(title.cloneNode(true));
+    </script>
+  </body>
+</html>

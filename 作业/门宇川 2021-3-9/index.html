@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>密码强度</title>
+    <style>
+      #root > div {
+        margin-bottom: 20px;
+      }
+      .password-box b {
+        display: inline-block;
+        width: 50px;
+        text-align: center;
+        padding: 5px;
+        margin: 5px;
+        border: 1px solid #ccc;
+        transition: 0.4s;
+      }
+      .schedule-box .del {
+        color: #ff4d50;
+        text-decoration: line-through;
+      }
+      .schedule-box u {
+        color: #ff4d50;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="password-box">
+        <label for="password">密码强度</label>
+        <input type="password" id="password" />
+        <div class="strength"><b>弱</b><b>一般</b><b>强</b></div>
+      </div>
+      <div class="star-box">
+        <div>打星</div>
+        <div class="star">
+          <img src="./images/shining.png" />
+          <img src="./images/shining.png" />
+          <img src="./images/shining.png" />
+          <img src="./images/shining.png" />
+          <img src="./images/shining.png" />
+        </div>
+      </div>
+      <div class="schedule-box">
+        <div>
+          <input type="text" id="addtodo" placeholder="新的待办事项" />
+          <button class="add-btn">添加</button>
+        </div>
+        <ul class="schedule">
+          <li></li>
+        </ul>
+        <div>全部 <u>已完成</u> 未完成</div>
+      </div>
+    </div>
+    <script>
+      let todolist = [
+        {
+          name: "吃饭",
+          state: false,
+        },
+        {
+          name: "看书",
+          state: false,
+        },
+        {
+          name: "看电影",
+          state: false,
+        },
+        {
+          name: "逛街",
+          state: false,
+        },
+        {
+          name: "写作业",
+          state: false,
+        },
+        {
+          name: "写代码",
+          state: false,
+        },
+      ];
+      password();
+      star();
+      schedule();
+      addTodo();
+      function password() {
+        let passwordInput = document.getElementById("password");
+        let strength = document.getElementsByClassName("strength")[0].children;
+        passwordInput.onkeydown = (e) => {
+          const { length } = e.target.value;
+          for (const event of strength) {
+            console.log(event);
+            event.style.background = "#fff";
+            event.style.color = "#000";
+          }
+          if (length <= 6) {
+            strength[0].style.color = "#fff";
+            strength[0].style.background = "#f33";
+          } else if (length > 6 && length <= 10) {
+            strength[0].style.color = "#fff";
+            strength[1].style.color = "#fff";
+            strength[0].style.background = "#bcbc2b";
+            strength[1].style.background = "#bcbc2b";
+          } else {
+            strength[0].style.color = "#fff";
+            strength[1].style.color = "#fff";
+            strength[2].style.color = "#fff";
+            strength[0].style.background = "#2ca92c";
+            strength[1].style.background = "#2ca92c";
+            strength[2].style.background = "#2ca92c";
+          }
+        };
+      }
+      function star() {
+        let stars = document.getElementsByClassName("star")[0].children;
+        for (const starsKey in [...stars]) {
+          const index = starsKey * 1;
+          stars[index].onmouseover = () => {
+            for (const event of stars) {
+              event.setAttribute("src", `./images/empty.png`);
+            }
+            for (i = 0; i <= index; i++) {
+              stars[i].setAttribute("src", "./images/shining.png");
+            }
+          };
+        }
+      }
+      function schedule() {
+        let schedules = document.getElementsByClassName("schedule")[0];
+        schedules.innerHTML = showTodo();
+      }
+      // 添加todo
+      function addTodo() {
+        let addInput = document.getElementById("addtodo");
+        let schedules = document.getElementsByClassName("schedule")[0];
+        let addBtn = document.getElementsByClassName("add-btn")[0];
+        addBtn.addEventListener("click", () => {
+          if (addInput.value.length) {
+            todolist.push({ name: addInput.value, state: false });
+            addInput.value = "";
+            schedules.innerHTML = showTodo();
+          } else {
+            alert("请正确输入待办事项！");
+          }
+        });
+      }
+      // 展示列表
+      function showTodo() {
+        let li = "";
+        for (const index in todolist) {
+          const _index = index * 1;
+          li += `<li class="${todolist[_index].state ? "del" : ""} ${
+            _index === 1 || _index === 4 ? "del" : ""
+          }">
+      	${todolist[_index].name}
+      </li>`;
+        }
+        return li;
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>title</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+      #carousel {
+        width: 600px;
+        height: 320px;
+        margin: 60px auto 10px;
+        border: 1px solid #eee;
+        position: relative;
+      }
+      .carousel-box {
+        position: relative;
+      }
+      .cl:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      .fr {
+        float: right;
+      }
+
+      .carousel-box > .carousel {
+        width: 600px;
+        height: 320px;
+        line-height: 320px;
+        text-align: center;
+        font-size: 32px;
+        color: #fff;
+        background-clip: content-box;
+        position: absolute;
+        float: left;
+        z-index: 9;
+        padding: 4px;
+        box-sizing: border-box;
+        transition: left 0.4s ease-in;
+      }
+      .carousel-box > .carousel:nth-of-type(odd) {
+        background-color: #4ac5ce;
+      }
+      .carousel-box > .carousel:nth-of-type(even) {
+        background-color: #ff4d50;
+      }
+      .btns {
+        width: 600px;
+        height: 320px;
+        margin: 0 auto;
+        position: relative;
+      }
+      .btns > b {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        background: #eee;
+        border-radius: 4px;
+      }
+      .btns > .tip {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        line-height: 30px;
+        font-size: 28px;
+        text-align: center;
+        z-index: -1;
+      }
+      .circle-box {
+        width: 100%;
+        position: absolute;
+        z-index: 10;
+        left: 0;
+        bottom: 20px;
+        text-align: center;
+      }
+      .circle-box i {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        position: relative;
+        z-index: 11;
+        background-color: #fff;
+        border-radius: 50%;
+        margin: 0 4px;
+      }
+      .circle-box i.active {
+        background-color: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="carousel">
+        <div class="carousel-box cl">
+          <div class="carousel">4</div>
+          <div class="carousel">1</div>
+          <div class="carousel">2</div>
+          <div class="carousel">3</div>
+        </div>
+        <div class="circle-box">
+          <i class="active"></i><i></i><i></i><i></i>
+        </div>
+      </div>
+      <div class="btns cl">
+        <b class="pre-btn">-</b>
+        <b class="next-btn fr">+</b>
+        <div class="tip">1</div>
+      </div>
+    </div>
+    <script>
+      let carousels = document.getElementsByClassName("carousel");
+      let preBtn = document.getElementsByClassName("pre-btn")[0];
+      let nextBtn = document.getElementsByClassName("next-btn")[0];
+      let tip = document.getElementsByClassName("tip")[0];
+      let circles = document.getElementsByClassName("circle-box")[0].children;
+      const sizeNum = carousels[0].offsetWidth;
+      for (let index = 0; index < carousels.length; index++) {
+        carousels[index].style.left = (index - 1) * sizeNum + "px";
+      }
+      let start = startCarousel();
+      preBtn.onmouseover = () => {
+        clearInterval(start);
+      };
+      nextBtn.onmouseover = () => {
+        clearInterval(start);
+      };
+      preBtn.onmouseout = () => {
+        start = startCarousel();
+      };
+      nextBtn.onmouseout = () => {
+        start = startCarousel();
+      };
+      preBtn.onclick = () => {
+        Previous();
+      };
+      nextBtn.onclick = () => {
+        Next();
+      };
+      document.onkeydown = function (event) {
+        clearInterval(start);
+        if (event.key === "ArrowLeft") {
+          Previous();
+          start = startCarousel();
+        }
+        if (event.key === "ArrowRight") {
+          Next();
+        }
+        start = startCarousel();
+      };
+
+      function startCarousel() {
+        return setInterval(() => {
+          // let i = parseInt(tip.innerText);
+          // tip.innerText = i + 1;
+          Next();
+        }, 2000);
+      }
+      function Previous() {
+        for (let index = 0; index < carousels.length; index++) {
+          const Left = parseInt(carousels[index].style.left);
+          if (Left === (carousels.length - 2) * sizeNum) {
+            carousels[index].style.left = -1 * sizeNum + "px";
+          } else {
+            carousels[index].style.left = Left + sizeNum + "px";
+          }
+          if (Left === 0) {
+            resetCircle(index);
+            tip.innerText = index - 1;
+          }
+        }
+      }
+      function Next() {
+        for (let index = 0; index < carousels.length; index++) {
+          const Left = parseInt(carousels[index].style.left);
+          if (Left === -1 * sizeNum) {
+            carousels[index].style.left =
+              (carousels.length - 2) * sizeNum + "px";
+          } else {
+            carousels[index].style.left = Left - sizeNum + "px";
+          }
+          if (Left === 0) {
+            resetCircle(index);
+            tip.innerText = index + 1;
+          }
+          console.log(Left, -1 * sizeNum, Left === -1 * sizeNum);
+        }
+      }
+      function resetCircle(index) {
+        for (const circle of circles) {
+          circle.classList.remove("active");
+        }
+        circles[index].classList.add("active");
+      }
+      function clickCircle() {
+        for (let i = 0; i < circles.length; i++) {
+          circles[i].onclick = () => {
+            console.log(i);
+            resetCircle(i);
+            let _size = i * sizeNum;
+            for (const carousel of carousels) {
+              const Left = parseInt(carousel.style.left);
+              if (Left === -1 * sizeNum) {
+                carousels[index].style.left =
+                  (carousels.length - 2) * sizeNum + "px";
+              } else {
+                carousels[index].style.left = Left - sizeNum + "px";
+              }
+            }
+          };
+        }
+      }
+      clickCircle();
+    </script>
+  </body>
+</html>

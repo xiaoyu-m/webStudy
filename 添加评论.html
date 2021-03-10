@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      #root {
+        width: 888px;
+        margin: 15px auto;
+      }
+      li {
+        list-style: none;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-top: 0;
+      }
+      li:first-child {
+        border-top: 1px solid #ccc;
+        border-radius: 6px 6px 0 0;
+      }
+      li:last-child {
+        border-radius: 0 0 6px 6px;
+      }
+      li * {
+        cursor: pointer;
+      }
+      li .right {
+        text-align: right;
+      }
+      li textarea {
+        font-size: 20px;
+        height: 100px;
+        width: 100%;
+      }
+      li b {
+        text-decoration: underline;
+      }
+      .item div {
+        font-size: 20px;
+      }
+      .item p {
+        color: #aaa;
+        margin: 0;
+      }
+      .input-box {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <ul>
+        <li>
+          <h1><center>评论练习</center></h1>
+        </li>
+        <li>
+          <div class="input-box">
+            <textarea></textarea>
+            <div class="right">
+              <b class="add" onclick="Add()">评论</b>
+              <b class="quit" onclick="Quit()">取消</b>
+            </div>
+          </div>
+          <div class="right reply-box">
+            <b class="reply" onclick="Reply()">回复</b>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <script>
+      let ul = document.querySelectorAll("ul")[0];
+      let li = ul.children;
+      let inputBox = document.getElementsByClassName("input-box")[0];
+      let replyBox = document.getElementsByClassName("reply-box")[0];
+      let Text = document.querySelector("textarea");
+
+      function Add() {
+        if (Text.value.length) {
+          const _li = document.createElement("li");
+          _li.className = "item";
+          _li.innerHTML = `
+          <div>${Text.value}</div>
+          <p>${li.length - 1}楼</p>`;
+          Text.value = "";
+          ul.insertBefore(_li, li[li.length - 1]);
+        } else {
+          alert("请输入评论！");
+        }
+      }
+
+      function Quit() {
+        inputBox.style.display = "none";
+        replyBox.style.display = "block";
+        Text.value = "";
+      }
+
+      function Reply() {
+        inputBox.style.display = "block";
+        replyBox.style.display = "none";
+        Text.value = "";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="root">
+      <div id="content"></div>
+    </div>
+    <script>
+      let a = "hello xiaoyu";
+      let c = 0;
+      function _setTimeout(c) {
+        let b = document.createElement("b");
+        setTimeout(() => {
+          b.innerHTML = a[a.length - c - 1];
+          return b;
+        }, 500 * c);
+        return b;
+      }
+      for (let i = 0; i < a.length; i++) {
+        document.getElementById("content").append(_setTimeout(i));
+      }
+      console.log(navigator);
+    </script>
+  </body>
+</html>

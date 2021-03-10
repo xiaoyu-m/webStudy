@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>抽奖</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #root {
+        width: 666px;
+        margin: 50px auto;
+        padding: 15px 30px;
+        border: 2px solid #ef5a55;
+        border-radius: 8px;
+      }
+      #root h2 {
+        text-align: center;
+      }
+      #root .name-box {
+        height: 80px;
+        line-height: 80px;
+        border: 1px solid #ccc;
+        margin: 15px 0;
+        border-radius: 5px;
+        text-align: center;
+        font-size: 32px;
+      }
+      #root .btn-box,
+      #root .win-box {
+        text-align: center;
+      }
+      #root .btn-box .btn {
+        padding: 8px 16px;
+        background-color: #ef5a55;
+        color: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 0 10px;
+        display: inline-block;
+      }
+      #root .btn-box .btn.disable {
+        background-color: #ccc;
+        color: #666;
+        cursor: no-drop;
+      }
+      #root .win-box > div {
+        width: 160px;
+        height: 160px;
+        text-align: center;
+        display: inline-block;
+        background-color: #f3534f;
+        color: #fff;
+        box-sizing: border-box;
+        padding: 35px 0;
+        border-radius: 50%;
+        margin: 25px 10px 10px;
+      }
+      #root .win-box .win {
+        height: 40px;
+        line-height: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <h1 class="title">抽奖</h1>
+      <h2>中奖姓名</h2>
+      <div class="name-box"></div>
+      <div class="btn-box">
+        <b class="start-btn btn">开始</b>
+        <b class="stop-btn btn disable">停止</b>
+      </div>
+      <div class="win-box">
+        <div>
+          <div>一等奖</div>
+          <h1 class="win">虚位以待</h1>
+          <p>恭喜中奖</p>
+        </div>
+        <div>
+          <div>二等奖</div>
+          <h1 class="win">虚位以待</h1>
+          <p>恭喜中奖</p>
+        </div>
+        <div>
+          <div>三等奖</div>
+          <h1 class="win">虚位以待</h1>
+          <p>恭喜中奖</p>
+        </div>
+      </div>
+    </div>
+    <script>
+      let stuInfo = ["张三", "李四", "王五", "赵六", "孙七"];
+      let win = [];
+      let _win = ["张三", "李四", "王五"];
+      let title = document.getElementsByClassName("title")[0];
+      let nameBox = document.getElementsByClassName("name-box")[0];
+      let winBox = document.getElementsByClassName("win");
+      let startBtn = document.getElementsByClassName("start-btn")[0];
+      let stopBtn = document.getElementsByClassName("stop-btn")[0];
+      let lottery = null;
+      let blackBox = true;
+      let blackBoxCount = 0;
+
+      title.onclick = () => {
+        blackBoxSwitch();
+      };
+
+      startBtn.onclick = () => {
+        if (Boolean([...startBtn.classList].indexOf("disable") === -1)) {
+          lottery = Start();
+        }
+        if (win.length < 3) {
+          startBtn.classList.add("disable");
+          stopBtn.classList.remove("disable");
+        }
+      };
+
+      stopBtn.onclick = () => {
+        if (Boolean([...stopBtn.classList].indexOf("disable") === -1)) {
+          clearInterval(lottery);
+          if (win.length < 3) {
+            if (blackBox) {
+              win.push(nameBox.innerText);
+            } else {
+              nameBox.innerText = _win[blackBoxCount];
+              win.push(_win[blackBoxCount]);
+              blackBoxCount++;
+            }
+          }
+          showWin();
+        }
+        stopBtn.classList.add("disable");
+        startBtn.classList.remove("disable");
+        if (win.length === 3) {
+          startBtn.classList.add("disable");
+        }
+      };
+      // 暗箱操作
+      function blackBoxSwitch() {
+        blackBox = !blackBox;
+      }
+      // 开始抽奖
+      function Start() {
+        return setInterval(() => {
+          let num = GetNum(0, stuInfo.length - 1);
+          if (win.indexOf(stuInfo[num]) === -1) {
+            nameBox.innerText = stuInfo[num];
+          }
+        }, 50);
+      }
+      // 展示获奖人员
+      function showWin() {
+        for (const index in winBox) {
+          winBox[index].innerText = win[index] ? win[index] : "";
+        }
+      }
+      // 随机数
+      function GetNum(x = 1, y = 10) {
+        return Math.floor(Math.random() * (y - x + 1) + x);
+      }
+    </script>
+  </body>
+</html>

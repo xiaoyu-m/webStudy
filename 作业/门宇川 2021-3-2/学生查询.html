@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>学生管理系统</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      #root {
+        width: 888px;
+        margin: 15px auto;
+        background-color: #efefef;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      input,
+      select,
+      textarea {
+        outline: none;
+      }
+      input {
+        margin-top: 15px;
+        padding: 3px 12px;
+      }
+      .find-input {
+        display: block;
+      }
+      [type="radio"] {
+        margin-right: 15px;
+      }
+      .box > div,
+      .box .hide {
+        display: none;
+      }
+      .box .show {
+        display: block;
+      }
+      .btn {
+        background-color: #4ac5ce;
+        color: #fff;
+        margin-top: 10px;
+        padding: 3px 12px;
+        display: inline-block;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      table {
+        margin-top: 15px;
+        border-collapse: collapse;
+      }
+      td,
+      th {
+        min-width: 100px;
+        padding: 5px 0;
+        text-align: center;
+      }
+      tr:first-of-type {
+        background-color: #999 !important;
+        color: #fff;
+      }
+      tr:nth-of-type(odd) {
+        background-color: #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <h1>学生管理系统</h1>
+      <div>
+        请选择您需要执行的操作：
+        <label for="find">查询</label>
+        <input type="radio" id="find" name="chiose" checked />
+        <label for="edit">修改</label>
+        <input type="radio" id="edit" name="chiose" />
+        <label for="add">增加</label>
+        <input type="radio" id="add" name="chiose" />
+        <label for="del">删除</label>
+        <input type="radio" id="del" name="chiose" />
+      </div>
+      <div class="box">
+        <div class="find-box show">
+          请选择您要进行的查询：
+          <select id="findSelect">
+            <option value="0">班级查询</option>
+            <option value="1">学生查询</option>
+          </select>
+          <div class="find-content">
+            <b class="find-btn btn">查询</b>
+            <input
+              type="text"
+              class="find-input hide"
+              placeholder="请输入姓名"
+            />
+            <div class="find content"></div>
+          </div>
+        </div>
+        <div class="edit-box"></div>
+        <div class="add-box"></div>
+        <div class="del-box"></div>
+      </div>
+      <script>
+        // 初始化学生信息
+        let stuInfo = [
+          [
+            ["学号", "姓名", "年龄", "性别", "分数", "班级"],
+            ["1", "谢杰", "18", "男", "100", "1班"],
+            ["2", "张小红", "23", "女", "89", "1班"],
+            ["3", "李四", "17", "男", "93", "1班"],
+            ["4", "王小娟", "19", "女", "91", "1班"],
+            ["5", "赵六", "20", "男", "95", "1班"],
+          ],
+          [
+            ["学号", "姓名", "年龄", "性别", "分数", "班级"],
+            ["1", "娜美", "18", "女", "85", "2班"],
+            ["2", "罗宾", "19", "女", "91", "2班"],
+            ["3", "谢杰", "19", "男", "92", "2班"],
+            ["4", "鸣人", "21", "男", "94", "2班"],
+            ["5", "小樱", "22", "女", "89", "2班"],
+          ],
+          [
+            ["学号", "姓名", "年龄", "性别", "分数", "班级"],
+            ["1", "王宝强", "22", "男", "86", "3班"],
+            ["2", "李宇春", "25", "女", "89", "3班"],
+            ["3", "迪丽热巴", "24", "女", "80", "3班"],
+            ["4", "赵丽颖", "26", "女", "92", "3班"],
+            ["5", "成龙", "19", "男", "96", "3班"],
+          ],
+        ];
+        function main() {
+          const chioses = document.getElementsByName("chiose");
+          for (const index in chioses) {
+            chioses[index].onclick = () => {
+              let boxs = document.getElementsByClassName("box")[0].children;
+              for (const box of boxs) {
+                box.classList.remove("show");
+              }
+              boxs[index].classList.add("show");
+            };
+          }
+          Student(0);
+        }
+        function Student(index) {
+          switch (index) {
+            case 0:
+              let selectclass = selectClass();
+              selectclass.classList.add("find-class-chiose");
+              let findBox = document.querySelector(".find-box");
+              let findSelect = document.getElementById("findSelect");
+              let findContent = document.getElementsByClassName(
+                "find-content"
+              )[0];
+              let findBtn = document.getElementsByClassName("find-btn")[0];
+              let findInput = document.getElementsByClassName("find-input")[0];
+              let Content =
+                findContent.children[findContent.children.length - 1];
+              // 班级/学生 查询切换
+              findSelect.onchange = () => {
+                Content.innerHTML = "";
+                const _index = findSelect.selectedIndex;
+                selectclass.classList[classNameMethod(_index)]("hide");
+                findInput.classList[classNameMethod(!_index)]("hide");
+              };
+              findBox.insertBefore(selectclass, findContent);
+              selectclass = document.getElementsByClassName(
+                "find-class-chiose"
+              )[0];
+              findBtn.onclick = () => {
+                Content.innerHTML = "";
+                let stus = [];
+                if (findSelect.selectedIndex) {
+                  if (findInput.value.length) {
+                    stus.push(stuInfo[0][0]);
+                    for (const _class of stuInfo) {
+                      for (const _stu of _class) {
+                        if (_stu[1] === findInput.value) {
+                          stus.push(_stu);
+                        }
+                      }
+                    }
+                    if (stus.length > 1) {
+                      let table = Table(stus);
+                      Content.append(table);
+                    } else {
+                      alert("抱歉，查无此人！");
+                    }
+                  } else {
+                    alert("请您输入姓名！");
+                  }
+                } else {
+                  stus = findAClass(selectclass.selectedIndex);
+                  let table = Table(stus);
+                  Content.append(table);
+                }
+              };
+              break;
+            case 1:
+              break;
+            case 2:
+              break;
+            case 3:
+              break;
+          }
+        }
+        // 班级查询
+        function findAClass(classNum = -1) {
+          let results = [];
+          if (classNum >= 0 && classNum < stuInfo.length) {
+            results = stuInfo[classNum];
+          }
+          return results;
+        }
+        // 班级下拉菜单
+        function selectClass() {
+          let _select = document.createElement("select");
+          for (const classEven of stuInfo) {
+            const _option = document.createElement("option");
+            _option.innerHTML = classEven[1][classEven[1].length - 1];
+            _select.append(_option);
+          }
+          return _select;
+        }
+        function Table(lists) {
+          let table = document.createElement("table");
+          let tr = document.createElement("tr");
+          // 表头添加
+          for (const thIndex in lists[0]) {
+            let th = document.createElement("th");
+            th.innerHTML = lists[0][thIndex];
+            tr.append(th);
+          }
+          table.append(tr);
+
+          // 表数据添加
+          for (let trIndex = 1; trIndex < lists.length; trIndex++) {
+            let tr = document.createElement("tr");
+            for (const tdEven of lists[trIndex]) {
+              let td = document.createElement("td");
+              td.innerHTML = tdEven;
+              tr.append(td);
+            }
+            table.append(tr);
+          }
+
+          return table;
+        }
+        // 类名切换 添加/删除
+        function classNameMethod(state) {
+          return state ? "add" : "remove";
+        }
+        main();
+      </script>
+    </div>
+  </body>
+</html>

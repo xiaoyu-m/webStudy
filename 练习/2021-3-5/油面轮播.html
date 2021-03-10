@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>title</title>
+    <style>
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+      }
+      #carousel {
+        width: 600px;
+        height: 320px;
+        margin: 60px auto 10px;
+        border: 1px solid #ccc;
+        position: relative;
+      }
+      .cl:after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+      .fr {
+        float: right;
+      }
+
+      .carousel-box > .carousel {
+        width: 600px;
+        height: 320px;
+        line-height: 320px;
+        text-align: center;
+        font-size: 32px;
+        color: #fff;
+        background-clip: content-box;
+        position: absolute;
+        float: left;
+        padding: 4px;
+        box-sizing: border-box;
+        transition: 0.4s;
+        opacity: 0;
+      }
+      .carousel-box > .carousel.active {
+        opacity: 1;
+      }
+      .carousel-box > .carousel:nth-of-type(odd) {
+        background-color: #4ac5ce;
+      }
+      .carousel-box > .carousel:nth-of-type(even) {
+        background-color: #ff4d50;
+      }
+      .btns,
+      .circle-nav,
+      .progressBar {
+        width: 600px;
+        margin: 0 auto 20px;
+        position: relative;
+      }
+      .btns > b {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        text-align: center;
+        background: #eee;
+        border-radius: 4px;
+      }
+      .progressBar {
+        height: 20px;
+        box-sizing: border-box;
+        padding: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+      }
+      .progressBar p {
+        width: 0;
+        height: 100%;
+        background-color: #ef5a55;
+      }
+      .progressBar p.active {
+        transition: 1s;
+        width: 100%;
+      }
+      .circle-nav {
+        display: flex;
+        justify-content: space-between;
+      }
+      .circle-nav li {
+        list-style: none;
+        width: 24%;
+        height: 88px;
+        line-height: 88px;
+        text-align: center;
+        padding: 5px 4px;
+        background-clip: content-box;
+        box-sizing: border-box;
+        color: #fff;
+        border: 1px solid #ccc;
+        transition: 0.4s;
+        opacity: 0.2;
+      }
+      .circle-nav li:nth-of-type(even) {
+        background-color: #4ac5ce;
+      }
+      .circle-nav li:nth-of-type(odd) {
+        background-color: #ff4d50;
+      }
+      .circle-nav li.active {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div id="carousel">
+        <div class="carousel-box cl">
+          <div class="carousel active">1</div>
+          <div class="carousel">2</div>
+          <div class="carousel">3</div>
+          <div class="carousel">4</div>
+        </div>
+      </div>
+      <div class="progressBar"><p></p></div>
+      <div class="circle-nav">
+        <li class="active">1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+      </div>
+      <div class="btns cl">
+        <b class="pre-btn">-</b>
+        <b class="next-btn fr">+</b>
+      </div>
+    </div>
+    <script>
+      let carousels = document.getElementsByClassName("carousel");
+      let preBtn = document.getElementsByClassName("pre-btn")[0];
+      let nextBtn = document.getElementsByClassName("next-btn")[0];
+      let navs = document.getElementsByClassName("circle-nav")[0].children;
+      let progressBar = document.getElementsByClassName("progressBar")[0]
+        .children[0];
+      carousels = [...carousels];
+      navs = [...navs];
+      let start = startCarousel();
+      preBtn.onmouseover = () => {
+        clearInterval(start);
+      };
+      nextBtn.onmouseover = () => {
+        clearInterval(start);
+      };
+      preBtn.onmouseout = () => {
+        start = startCarousel();
+      };
+      nextBtn.onmouseout = () => {
+        start = startCarousel();
+      };
+      for (const nav of navs) {
+        nav.onmouseover = () => {
+          clearInterval(start);
+        };
+        nav.onmouseout = () => {
+          start = startCarousel();
+        };
+      }
+      preBtn.onclick = () => {
+        progressBar.classList.remove("active");
+        Previous();
+      };
+      nextBtn.onclick = () => {
+        progressBar.classList.remove("active");
+        Next();
+      };
+      document.onkeydown = function (event) {
+        clearInterval(start);
+        if (event.key === "ArrowLeft") {
+          progressBar.classList.remove("active");
+          Previous();
+        }
+        if (event.key === "ArrowRight") {
+          progressBar.classList.remove("active");
+          Next();
+        }
+        start = startCarousel();
+      };
+
+      function startCarousel() {
+        setTimeout(() => {
+          progressBar.classList.add("active");
+        }, 1000);
+
+        return setInterval(() => {
+          progressBar.classList.remove("active");
+          Next();
+        }, 2000);
+      }
+      function Previous() {
+        let _index = findActive(carousels);
+
+        const index = _index == 0 ? 3 : _index - 1;
+        carousels[_index].classList.remove("active");
+        carousels[index].classList.add("active");
+        for (const _navIndex in navs) {
+          navs[_navIndex].classList.remove("active");
+        }
+        navs[index].classList.add("active");
+      }
+      function Next() {
+        let _index = findActive(carousels);
+        const index = _index + 1 == 4 ? 0 : _index + 1;
+        carousels[_index].classList.remove("active");
+        carousels[index].classList.add("active");
+        for (const _navIndex in navs) {
+          navs[_navIndex].classList.remove("active");
+        }
+        navs[index].classList.add("active");
+        setTimeout(() => {
+          progressBar.classList.add("active");
+        }, 1000);
+      }
+      // 图片导航
+      function clickNav() {
+        for (const navIndex in navs) {
+          navs[navIndex].onclick = (even) => {
+            progressBar.classList.remove("active");
+            for (const _navIndex in navs) {
+              navs[_navIndex].classList.remove("active");
+              carousels[_navIndex].classList.remove("active");
+            }
+            even.target.classList.add("active");
+            carousels[navIndex].classList.add("active");
+          };
+        }
+      }
+      // 查找active位置
+      function findActive(obj) {
+        let _index = 0;
+        for (const index in obj) {
+          if ([...obj[index].classList].indexOf("active") !== -1) {
+            _index = index;
+          }
+        }
+        return _index * 1;
+      }
+      clickNav();
+    </script>
+  </body>
+</html>

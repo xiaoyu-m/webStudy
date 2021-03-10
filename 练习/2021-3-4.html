@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>九宫格抽奖</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        -moz-user-select: none; /* Firefox私有属性 */
+        -webkit-user-select: none; /* WebKit内核私有属性 */
+        -ms-user-select: none; /* IE私有属性(IE10及以后) */
+        -khtml-user-select: none; /* KHTML内核私有属性 */
+        -o-user-select: none; /* Opera私有属性 */
+        user-select: none; /* CSS3属性 */
+      }
+      ul {
+        width: 360px;
+        height: 360px;
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 50px auto;
+      }
+      li {
+        list-style: none;
+        width: 120px;
+        height: 120px;
+        line-height: 120px;
+        text-align: center;
+        float: left;
+        background-color: #efefef;
+        border: 1px solid #fff;
+        box-sizing: border-box;
+        font-size: 24px;
+        cursor: pointer;
+      }
+      .item.active {
+        background-color: #4ac5ce;
+        color: #fff;
+      }
+      ul:after {
+        content: " ";
+        display: block;
+        clear: both;
+      }
+      .start-btn {
+        background-color: #ff4d50;
+        color: #fff;
+      }
+      .start-btn.disable {
+        box-shadow: inset 0 0 10px #666;
+        background-color: #ccc;
+        color: #666;
+        cursor: no-drop;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <ul>
+        <li class="item">7毛</li>
+        <li class="item">6毛</li>
+        <li class="item">5毛</li>
+        <li class="item">4毛</li>
+        <li class="start-btn">开始抽奖</li>
+        <li class="item">3毛</li>
+        <li class="item">2毛</li>
+        <li class="item">1毛</li>
+        <li class="item">未中奖</li>
+      </ul>
+    </div>
+    <script>
+      let start = null;
+      let nums = [0, 1, 2, 4, 7, 6, 5, 3];
+      let lotterys = document.getElementsByClassName("item");
+      let startBtn = document.getElementsByClassName("start-btn")[0];
+      let lotteryState = false;
+      startBtn.onclick = () => {
+        lotteryState = !lotteryState;
+        if ([...startBtn.classList].indexOf("disable") === -1) {
+          let start = lotteryStart();
+          setTimeout(() => {
+            clearInterval(start);
+            startBtn.classList.remove("disable");
+          }, 4000);
+        }
+        startBtn.classList.add("disable");
+      };
+      function lotteryStart() {
+        let c = 0;
+        let n = GetNum(1, 2) * 50;
+        return setInterval(() => {
+          if (c === lotterys.length) {
+            c = 0;
+          }
+          for (const lottery of lotterys) {
+            lottery.classList.remove("active");
+          }
+          lotterys[nums[c]].classList.add("active");
+          c++;
+        }, GetNum(30, 100));
+      }
+      // 1-10的随机数
+      function GetNum(x = 1, y = 10) {
+        return Math.floor(Math.random() * (y - x + 1) + x);
+      }
+    </script>
+  </body>
+</html>

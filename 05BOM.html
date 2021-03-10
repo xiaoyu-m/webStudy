@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>BOM</title>
+  </head>
+  <body>
+    <div id="root">
+      <div class="lists"><a href="123">123</a></div>
+      <div class="list"></div>
+      <div class="lists"><a href="123">1211113</a></div>
+      <div class="list"><a href="123">123</a></div>
+      <div class="aaa">1111111</div>
+      <div class="list"><a href="123">123</a></div>
+    </div>
+    <script>
+      /*console.log(
+        document.getElementsByClassName("lists") ===
+          document.getElementsByClassName("lists")
+      );
+      console.log(
+        document.querySelectorAll(".lists")[1].previousElementSibling
+      );*/
+      // console.log(document.querySelectorAll(".lists")[1].nextElementSibling);
+      let h1 = document.createElement("h1");
+      h1.innerHTML = "h1文本节点";
+      let aaa = document.querySelectorAll(".aaa");
+      document.getElementById("root").insertBefore(h1, aaa[0]);
+      // aaa.append(h1);
+    </script>
+  </body>
+</html>
